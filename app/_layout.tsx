@@ -10,8 +10,8 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 // Import your DB initializer
-import React from "react";
-import { initDB } from "./db/database"; // adjust path if needed
+import { SQLiteProvider } from "expo-sqlite";
+import { migrateDbIfNeeded } from "./db/database";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -20,20 +20,25 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  // Initialize database once on app start
-  React.useEffect(() => {
-    initDB();
-  }, []);
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
-      </Stack>
+      <SQLiteProvider databaseName="expenses.db" onInit={migrateDbIfNeeded} useSuspense>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", title: "Modal" }}
+          />
+          <Stack.Screen
+            name="add-expense"
+            options={{ presentation: "modal", title: "Add Expense" }}
+          />
+          <Stack.Screen
+            name="budget-settings"
+            options={{ presentation: "modal", title: "Set Budget" }}
+          />
+        </Stack>
+      </SQLiteProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );
