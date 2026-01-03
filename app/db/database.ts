@@ -1,7 +1,7 @@
 import * as SQLite from "expo-sqlite";
 
 // Open or create database
-export const db = SQLite.openDatabase("expenses.db");
+export const db = (SQLite as any).openDatabase('expenses.db');
 
 // Initialize tables
 export const initDB = () => {
