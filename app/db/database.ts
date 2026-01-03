@@ -5,7 +5,7 @@ export const db = (SQLite as any).openDatabase('expenses.db');
 
 // Initialize tables
 export const initDB = () => {
-  db.transaction((tx) => {
+  db.transaction((tx:any) => {
     // Expenses table
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS expenses (
